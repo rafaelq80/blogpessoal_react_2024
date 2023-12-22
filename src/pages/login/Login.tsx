@@ -1,4 +1,5 @@
-﻿import './Login.css';
+﻿import { Link } from 'react-router-dom';
+import './Login.css';
 
 function Login() {
 
@@ -29,19 +30,25 @@ function Login() {
 
                         />
                     </div>
-                    <button 
-                        type='submit' 
+
+                    <button
+                        type='submit'
                         className="rounded bg-indigo-400 flex justify-center
                                    hover:bg-indigo-900 text-white w-1/2 py-2">
-                        <span>Entrar</span>
+                        <Link to="/home">
+                            <span>Entrar</span>
+                        </Link>
                     </button>
 
                     <hr className="border-slate-800 w-full" />
 
                     <p>
                         Ainda não tem uma conta?{' '}
-                        Cadastre-se
+                        <Link to="/cadastro" className="text-indigo-800 hover:underline">
+                            Cadastre-se
+                        </Link>
                     </p>
+
                 </form>
                 <div className="fundoLogin hidden lg:block"></div>
             </div>

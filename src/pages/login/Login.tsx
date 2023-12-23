@@ -4,7 +4,8 @@ function Login() {
 
     return (
         <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 
+                    h-screen place-items-center font-bold ">
                 <form className="flex justify-center items-center flex-col w-1/2 gap-4" >
                     <h2 className="text-slate-900 text-5xl ">Entrar</h2>
                     <div className="flex flex-col w-full">
@@ -50,3 +51,4 @@ function Login() {
 }
 
 export default Login;
+

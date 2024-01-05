@@ -5,7 +5,7 @@ function Cadastro() {
 
   const navigate = useNavigate()
 
-  function back() {
+  function retornar() {
     navigate('/login')
   }
 
@@ -69,7 +69,7 @@ function Cadastro() {
 
           <div className="flex justify-around w-full gap-8">
             <button className='rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2' 
-                    onClick={back}
+                    onClick={retornar}
             >
               Cancelar
             </button>

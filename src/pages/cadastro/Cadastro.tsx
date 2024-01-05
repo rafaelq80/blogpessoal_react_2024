@@ -1,12 +1,66 @@
 ﻿import { useNavigate } from 'react-router-dom'
 import './Cadastro.css'
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import Usuario from '../../models/Usuario'
+import { cadastrarUsuario } from '../../services/Service'
 
 function Cadastro() {
 
   const navigate = useNavigate()
 
-  function back() {
+  function retornar() {
     navigate('/login')
+  }
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [confirmaSenha, setConfirmaSenha] = useState<string>("")
+
+  const [usuario, setUsuario] = useState<Usuario>({
+    id: 0,
+    nome: '',
+    usuario: '',
+    senha: '',
+    foto: ''
+  })
+
+  useEffect(() => {
+    if (usuario.id !== 0) {
+      retornar()
+    }
+  }, [usuario])
+
+  function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
+    setConfirmaSenha(e.target.value)
+  }
+
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    setUsuario({
+      ...usuario,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  async function cadastrarNovoUsuario(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    if (confirmaSenha === usuario.senha && usuario.senha.length >= 8) {
+      setIsLoading(true)
+
+      try {
+        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuario)
+        alert('Usuário cadastrado com sucesso')
+
+      } catch (error) {
+        alert('Erro ao cadastrar o Usuário')
+      }
+
+    } else {
+      alert('Dados inconsistentes. Verifique as informações de cadastro.')
+      setUsuario({ ...usuario, senha: "" })
+      setConfirmaSenha("")
+    }
+
+    setIsLoading(false)
   }
 
   return (
@@ -68,8 +122,8 @@ function Cadastro() {
           </div>
 
           <div className="flex justify-around w-full gap-8">
-            <button className='rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2' 
-                    onClick={back}
+            <button className='rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2'
+              onClick={retornar}
             >
               Cancelar
             </button>
@@ -81,7 +135,7 @@ function Cadastro() {
               Cadastrar
             </button>
           </div>
-          
+
         </form>
       </div>
     </>

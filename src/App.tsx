@@ -10,10 +10,10 @@ function App() {
     <>
         <BrowserRouter>
           <Navbar />
-          <div className="min-h-[77vh]">
+          <div className="min-h-80vh]">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
+              {/* <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} /> */}
               <Route path="/cadastro" element={<Cadastro />} />
             </Routes>
           </div>

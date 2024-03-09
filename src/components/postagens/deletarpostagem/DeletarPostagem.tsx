@@ -57,8 +57,13 @@ function DeletarPostagem() {
 
             alert('Postagem apagada com sucesso')
 
-        } catch (error) {
-            alert('Erro ao apagar a Postagem')
+        } catch (error: any) {
+            if (error.toString().includes('403')) {
+                alert('O token expirou, favor logar novamente')
+                handleLogout()
+            }else {
+                alert('Erro ao deletar a postagem.')
+            }
         }
 
         setIsLoading(false)

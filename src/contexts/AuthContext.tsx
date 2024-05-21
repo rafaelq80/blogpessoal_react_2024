@@ -28,12 +28,12 @@ export function AuthProvider({ children }: AuthProvidersProps) {
 
     const [isLoading, setIsLoading] = useState(false)
 
-    async function handleLogin(userLogin: UsuarioLogin) {
+    async function handleLogin(usuarioLogin: UsuarioLogin) {
         setIsLoading(true)
 
         try {
-            await login(`/usuarios/logar`, userLogin, setUsuario)
-            alert("Usuário foi autenticado com sucesso!")
+            await login(`/usuarios/logar`, usuarioLogin, setUsuario)
+            alert("O Usuário foi autenticado com sucesso!")
             setIsLoading(false)
         } catch (error) {
             console.log(error)

@@ -36,12 +36,11 @@ function Cadastro() {
       ...usuario,
       [e.target.name]: e.target.value
     })
-    console.log(usuario)
+
   }
 
   function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>){
     setConfirmaSenha(e.target.value)
-    console.log(confirmaSenha)
   }
 
   async function cadastrarNovoUsuario(e: FormEvent<HTMLFormElement>){
@@ -145,13 +144,16 @@ function Cadastro() {
                            hover:bg-indigo-900 w-1/2 py-2
                            flex justify-center' 
                 >
-                  {isLoading ? <RotatingLines
+                  {isLoading ? 
+                  
+                  <RotatingLines
                     strokeColor="white"
                     strokeWidth="5"
                     animationDuration="0.75"
                     width="24"
                     visible={true}
-                  /> :
+                  /> 
+                  :
                     <span>Cadastrar</span>
                   }
               

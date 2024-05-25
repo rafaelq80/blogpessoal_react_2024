@@ -26,7 +26,6 @@ function DeletarTema() {
             })
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token expirou, favor logar novamente')
                 handleLogout()
             }
         }
@@ -35,7 +34,7 @@ function DeletarTema() {
     useEffect(() => {
         if (token === '') {
             alert('Você precisa estar logado')
-            navigate('/login')
+            navigate('/')
         }
     }, [token])
 
@@ -59,7 +58,6 @@ function DeletarTema() {
 
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token expirou, favor logar novamente')
                 handleLogout()
             }else {
                 alert('Erro ao atualizar o tema.')

@@ -1,92 +1,123 @@
-﻿import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { RotatingLines } from "react-loader-spinner";
+﻿import { useState, useContext, useEffect, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
+import Postagem from "../../../models/Postagem";
 import Tema from "../../../models/Tema";
-import { atualizar, buscar, cadastrar } from "../../../services/Service";
+import { buscar, atualizar, cadastrar } from "../../../services/Service";
+import { RotatingLines } from "react-loader-spinner";
 
-function FormTema() {
+function FormPostagem() {
 
     const navigate = useNavigate();
 
-    const [tema, setTema] = useState<Tema>({} as Tema)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [temas, setTemas] = useState<Tema[]>([])
+
+    const [tema, setTema] = useState<Tema>({ id: 0, descricao: '', })
+    const [postagem, setPostagem] = useState<Postagem>({} as Postagem)
+
+    const { id } = useParams<{ id: string }>()
 
     const { usuario, handleLogout } = useContext(AuthContext)
     const token = usuario.token
 
-    const { id } = useParams<{ id: string }>();
+    async function buscarPostagemPorId(id: string) {
+        await buscar(`/postagens/${id}`, setPostagem, {
+            headers: {
+                Authorization: token,
+            },
+        })
+    }
 
-    async function buscarPorId(id: string) {
-        try {
-            await buscar(`/temas/${id}`, setTema, {
-                headers: { Authorization: token }
-            })
-        } catch (error: any) {
-            if (error.toString().includes('403')) {
-                alert('O token Expirou!')
-                handleLogout()
-            }
-        }
+    async function buscarTemaPorId(id: string) {
+        await buscar(`/temas/${id}`, setTema, {
+            headers: {
+                Authorization: token,
+            },
+        })
+    }
+
+    async function buscarTemas() {
+        await buscar('/temas', setTemas, {
+            headers: {
+                Authorization: token,
+            },
+        })
     }
 
     useEffect(() => {
         if (token === '') {
-            alert('Você precisa estar logado!')
-            navigate('/')
+            alert('Você precisa estar logado');
+            navigate('/');
         }
     }, [token])
 
     useEffect(() => {
+        buscarTemas()
+
         if (id !== undefined) {
-            buscarPorId(id)
+            buscarPostagemPorId(id)
         }
     }, [id])
 
-    function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-        setTema({
-            ...tema,
-            [e.target.name]: e.target.value
+    useEffect(() => {
+        setPostagem({
+            ...postagem,
+            tema: tema,
         })
+    }, [tema])
+
+    function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+        setPostagem({
+            ...postagem,
+            [e.target.name]: e.target.value,
+            tema: tema,
+            usuario: usuario,
+        });
     }
 
     function retornar() {
-        navigate("/temas")
+        navigate('/postagens');
     }
 
-    async function gerarNovoTema(e: ChangeEvent<HTMLFormElement>) {
+    async function gerarNovaPostagem(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault()
         setIsLoading(true)
 
-        if (id !== undefined) {
+        if (id != undefined) {
             try {
-                await atualizar(`/temas`, tema, setTema, {
-                    headers: { 'Authorization': token }
-                })
-                alert('O Tema foi atualizado com sucesso!')
+                await atualizar(`/postagens`, postagem, setPostagem, {
+                    headers: {
+                        Authorization: token,
+                    },
+                });
+
+                alert('Postagem atualizada com sucesso')
+
             } catch (error: any) {
                 if (error.toString().includes('403')) {
-                    alert('O Token Expirou!')
-                    handleLogout();
+                    handleLogout()
                 } else {
-                    alert('Erro ao atualizar o tema.')
+                    alert('Erro ao atualizar a Postagem')
                 }
-
             }
+
         } else {
             try {
-                await cadastrar(`/temas`, tema, setTema, {
-                    headers: { 'Authorization': token }
+                await cadastrar(`/postagens`, postagem, setPostagem, {
+                    headers: {
+                        Authorization: token,
+                    },
                 })
-                alert('O Tema foi cadastrado com sucesso!')
+
+                alert('Postagem cadastrada com sucesso');
+
             } catch (error: any) {
                 if (error.toString().includes('403')) {
-                    alert('O Token Expirou!')
-                    handleLogout();
+                    handleLogout()
                 } else {
-                    alert('Erro ao cadastrar o tema.')
+                    alert('Erro ao cadastrar a Postagem');
                 }
-
             }
         }
 
@@ -94,28 +125,60 @@ function FormTema() {
         retornar()
     }
 
+    const carregandoTema = tema.descricao === '';
+
     return (
-        <div className="container flex flex-col items-center justify-center mx-auto">
+        <div className="container flex flex-col mx-auto items-center">
             <h1 className="text-4xl text-center my-8">
-                {id === undefined ? 'Cadastrar Tema' : 'Editar Tema'}
+                {id !== undefined ? 'Editar Postagem' : 'Cadastrar Postagem'}
             </h1>
 
-            <form className="w-1/2 flex flex-col gap-4" onSubmit={gerarNovoTema}>
+            <form className="flex flex-col w-1/2 gap-4" onSubmit={gerarNovaPostagem}>
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="descricao">Descrição do Tema</label>
+                    <label htmlFor="titulo">Título da Postagem</label>
                     <input
                         type="text"
-                        placeholder="Descreva aqui seu tema"
-                        name='descricao'
+                        placeholder="Titulo"
+                        name="titulo"
+                        required
                         className="border-2 border-slate-700 rounded p-2"
-                        value={tema.descricao}
+                        value={postagem.titulo}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
                     />
                 </div>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="titulo">Texto da Postagem</label>
+                    <input
+                        type="text"
+                        placeholder="Texto"
+                        name="texto"
+                        required
+                        className="border-2 border-slate-700 rounded p-2"
+                        value={postagem.texto}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+                    />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <p>Tema da Postagem</p>
+                    <select name="tema" id="tema" className='border p-2 border-slate-800 rounded'
+                        onChange={(e) => buscarTemaPorId(e.currentTarget.value)}
+                    >
+                        <option value="" selected disabled>Selecione um Tema</option>
+
+                        {temas.map((tema) => (
+                            <>
+                                <option value={tema.id} >{tema.descricao}</option>
+                            </>
+                        ))}
+
+                    </select>
+                </div>
                 <button
-                    className="rounded text-slate-100 bg-indigo-400 
-                               hover:bg-indigo-800 w-1/2 py-2 mx-auto flex justify-center"
-                    type="submit">
+                    type='submit'
+                    className='rounded disabled:bg-slate-200 bg-indigo-400 hover:bg-indigo-800
+                               text-white font-bold w-1/2 mx-auto py-2 flex justify-center'
+                    disabled={carregandoTema}
+                >
                     {isLoading ?
                         <RotatingLines
                             strokeColor="white"
@@ -124,8 +187,7 @@ function FormTema() {
                             width="24"
                             visible={true}
                         /> :
-                        <span>{id === undefined ? 'Cadastrar' : 'Atualizar'}</span>
-
+                        <span>{id !== undefined ? 'Atualizar' : 'Cadastrar'}</span>
                     }
                 </button>
             </form>
@@ -133,4 +195,4 @@ function FormTema() {
     );
 }
 
-export default FormTema;
+export default FormPostagem;

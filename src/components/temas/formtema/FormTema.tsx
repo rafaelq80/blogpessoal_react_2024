@@ -24,7 +24,6 @@ function FormTema() {
             })
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token Expirou!')
                 handleLogout()
             }
         }
@@ -66,7 +65,6 @@ function FormTema() {
                 alert('O Tema foi atualizado com sucesso!')
             } catch (error: any) {
                 if (error.toString().includes('403')) {
-                    alert('O Token Expirou!')
                     handleLogout();
                 } else {
                     alert('Erro ao atualizar o tema.')
@@ -81,7 +79,6 @@ function FormTema() {
                 alert('O Tema foi cadastrado com sucesso!')
             } catch (error: any) {
                 if (error.toString().includes('403')) {
-                    alert('O Token Expirou!')
                     handleLogout();
                 } else {
                     alert('Erro ao cadastrar o tema.')

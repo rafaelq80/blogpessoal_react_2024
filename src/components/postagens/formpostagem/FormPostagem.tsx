@@ -96,7 +96,7 @@ function FormPostagem() {
         e.preventDefault()
         setIsLoading(true)
 
-        if (id != undefined) {
+        if (id !== undefined) {
             try {
                 await atualizar(`/postagens`, postagem, setPostagem, {
                     headers: {

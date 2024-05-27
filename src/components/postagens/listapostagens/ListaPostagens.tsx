@@ -25,7 +25,6 @@ function ListaPostagens() {
 
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token expirou, favor logar novamente')
                 handleLogout()
             }
         }

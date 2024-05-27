@@ -22,27 +22,39 @@ function FormPostagem() {
     const token = usuario.token
 
     async function buscarPostagemPorId(id: string) {
-        await buscar(`/postagens/${id}`, setPostagem, {
-            headers: {
-                Authorization: token,
-            },
-        })
+        try {
+            await buscar(`/postagens/${id}`, setPostagem, {
+                headers: { Authorization: token }
+            })
+        } catch (error: any) {
+            if (error.toString().includes('403')) {
+                handleLogout()
+            }
+        }
     }
 
     async function buscarTemaPorId(id: string) {
-        await buscar(`/temas/${id}`, setTema, {
-            headers: {
-                Authorization: token,
-            },
-        })
+        try {
+            await buscar(`/temas/${id}`, setTema, {
+                headers: { Authorization: token }
+            })
+        } catch (error: any) {
+            if (error.toString().includes('403')) {
+                handleLogout()
+            }
+        }
     }
 
     async function buscarTemas() {
-        await buscar('/temas', setTemas, {
-            headers: {
-                Authorization: token,
-            },
-        })
+        try {
+            await buscar('/temas', setTemas, {
+                headers: { Authorization: token }
+            })
+        } catch (error: any) {
+            if (error.toString().includes('403')) {
+                handleLogout()
+            }
+        }
     }
 
     useEffect(() => {
@@ -166,9 +178,7 @@ function FormPostagem() {
                         <option value="" selected disabled>Selecione um Tema</option>
 
                         {temas.map((tema) => (
-                            <>
-                                <option value={tema.id} >{tema.descricao}</option>
-                            </>
+                            <option value={tema.id} >{tema.descricao}</option>
                         ))}
 
                     </select>

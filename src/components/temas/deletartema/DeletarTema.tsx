@@ -60,7 +60,7 @@ function DeletarTema() {
             if (error.toString().includes('403')) {
                 handleLogout()
             }else {
-                alert('Erro ao atualizar o tema.')
+                alert('Erro ao deletar o tema.')
             }
         }
 

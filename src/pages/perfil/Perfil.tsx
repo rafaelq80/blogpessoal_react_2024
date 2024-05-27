@@ -12,7 +12,7 @@ function Perfil() {
     useEffect(() => {
         if (usuario.token === "") {
             alert('Você precisa estar logado')
-            navigate("/login")
+            navigate("/")
         }
     }, [usuario.token])
 

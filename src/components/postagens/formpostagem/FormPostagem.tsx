@@ -178,9 +178,7 @@ function FormPostagem() {
                         <option value="" selected disabled>Selecione um Tema</option>
 
                         {temas.map((tema) => (
-                            <>
-                                <option value={tema.id} >{tema.descricao}</option>
-                            </>
+                            <option value={tema.id} >{tema.descricao}</option>
                         ))}
 
                     </select>
